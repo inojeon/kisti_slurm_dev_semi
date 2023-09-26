@@ -1,0 +1,4 @@
+---
+- id: 1
+  name: qe_demo
+  location: /EDISON2/solvers/qe_demo/1.0.0

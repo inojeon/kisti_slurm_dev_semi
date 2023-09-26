@@ -1,0 +1,27 @@
+[SETUP]
+job_type = 'energy'
+npoints = 101
+path = 'LGXG'
+
+[SYSTEM]
+ecutwfc = 20
+ecutrho = 160
+degauss = 0.002
+input_dft = 'PZ'
+nbnd = 12
+
+[ELECTRONS]
+conv_thr = 1e-06
+electron_maxstep = 200
+mixing_beta = 0.1
+mixing_mode = 'plain'
+scf_must_converge = '.TRUE.'
+startingwfc = 'atomic+random'
+
+[K_POINTS_automatic]
+nk1 = 8
+nk2 = 8
+nk3 = 8
+sk1 = 1
+sk2 = 1
+sk3 = 1

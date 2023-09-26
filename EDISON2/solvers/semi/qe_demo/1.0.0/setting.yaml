@@ -1,0 +1,23 @@
+---
+name: qe_demo
+version: 1.0.0
+location: /EDISON2/solvers/qe_demo/1.0.0
+shell: python3
+mainExe: script_modeling.py
+inputs:
+  - option: "--inp"
+    exec: toml
+    sampleInputPath: inputs/input.toml
+  - option: "--xsf"
+    exec: xsf
+    sampleInputPath: inputs/input.xsf
+runScript: |
+  export PROGRAM_HOME={{PROGRAM_HOME}}
+
+  python3 {{PROGRAM_HOME}}/script_modeling.py {{inputArgs}}
+
+  pw.x < simulation_1.txt 
+  pw.x < simulation_2.txt 
+  bands.x < simulation_3.txt
+slurm:
+  runType: single

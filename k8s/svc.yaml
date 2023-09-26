@@ -1,0 +1,54 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: mysql
+  name: mysql
+  namespace: slurm
+spec:
+  ports:
+    - name: "3306"
+      port: 3306
+      targetPort: 3306
+  selector:
+    app: mysql
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: slurmctld
+  name: slurmctld
+  namespace: slurm
+spec:
+  ports:
+    - name: "6817"
+      port: 6817
+      targetPort: 6817
+    - name: "6818"
+      port: 6818
+      targetPort: 6818
+    - name: "6819"
+      port: 6819
+      targetPort: 6819
+  selector:
+    app: slurmctld
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: slurmd
+  name: slurmd-headless
+  namespace: slurm
+spec:
+  ports:
+    - name: "6818"
+      port: 6818
+      targetPort: 6818
+  selector:
+    app: slurmd
+  type: ClusterIP
+---
+

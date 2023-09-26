@@ -1,0 +1,117 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql
+  labels:
+    app: mysql
+  namespace: slurm
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mysql
+  template:
+    metadata:
+      labels:
+        app: mysql
+    spec:
+      containers:
+        - name: mysql
+          image: mariadb:10.10
+          env:
+            - name: MYSQL_DATABASE
+              value: slurm_acct_db
+            - name: MYSQL_PASSWORD
+              value: slurm2023!!
+            - name: MYSQL_RANDOM_ROOT_PASSWORD
+              value: "yes"
+            - name: MYSQL_USER
+              value: slurm
+          ports:
+            - containerPort: 3306
+      hostname: mysql
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: slurmctld
+  labels:
+    app: slurmctld
+  namespace: slurm
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: slurmctld
+  template:
+    metadata:
+      labels:
+        app: slurmctld
+    spec:
+      containers:
+        - image: inojeon/slurm_master_rocky8:21
+          name: slurmctld
+          imagePullPolicy: Never
+          volumeMounts:
+            - name: edison2-pvc
+              mountPath: /EDISON2
+          ports:
+            - containerPort: 6817
+            - containerPort: 6818
+            - containerPort: 6819
+      hostname: slurmctld
+      dnsConfig:
+        searches:
+          - slurmd-headless.slurm.svc.cluster.local
+      dnsPolicy: ClusterFirst
+      volumes:
+        - name: edison2-pvc
+          persistentVolumeClaim:
+            claimName: edison2-pvc
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  annotations:
+    description: EDISON Slurm HPC
+  name: slurmd
+  namespace: slurm
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: slurmd
+  serviceName: slurmd-headless
+  template:
+    metadata:
+      labels:
+        app: slurmd
+    spec:
+      containers:
+        - name: worker
+          image: inojeon/slurm_worker_rocky8:21
+          imagePullPolicy: Never
+          volumeMounts:
+            - name: edison2-pvc
+              mountPath: /EDISON2
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: 2
+            limits:
+              memory: "500Mi"
+              cpu: 2
+          ports:
+            - containerPort: 6818
+      dnsConfig:
+        searches:
+          - slurmd-headless.slurm.svc.cluster.local
+      dnsPolicy: ClusterFirst
+      volumes:
+        - name: edison2-pvc
+          persistentVolumeClaim:
+            claimName: edison2-pvc
+  updateStrategy:
+    type: RollingUpdate
+---
+
