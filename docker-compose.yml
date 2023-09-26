@@ -12,7 +12,7 @@ services:
     expose:
       - "3306"
   slurmctld:
-    image: slurm_master_rocky8:21
+    image: inojeon/slurm_master_rocky8:21
     hostname: slurmctld
     container_name: slurmctld
     volumes:
@@ -24,7 +24,7 @@ services:
     depends_on:
       - mysql
   slurmd-0:
-    image: slurm_worker_rocky8:21
+    image: inojeon/slurm_worker_rocky8:21
     hostname: slurmd-0
     container_name: slurmd-0
     volumes:
