@@ -17,10 +17,12 @@ services:
     container_name: slurmctld
     volumes:
       - ./EDISON2:/EDISON2
+      - /Users/ino/Work/kisti/edison/2023/slurm-api:/slurm-api
     ports:
       - "6817:6817"
       - "6818:6818"
       - "6819:6819"
+      - "8000:8000"
     depends_on:
       - mysql
   slurmd-0:

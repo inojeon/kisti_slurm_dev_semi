@@ -1,23 +1,26 @@
 ---
 name: qe_demo
 version: 1.0.0
-location: /EDISON2/solvers/qe_demo/1.0.0
+location: /EDISON2/solvers/semi/qe_demo/1.0.0
 shell: python3
 mainExe: script_modeling.py
 inputs:
   - option: "--inp"
     exec: toml
     sampleInputPath: inputs/input.toml
-  - option: "--xsf"
-    exec: xsf
-    sampleInputPath: inputs/input.xsf
+  - option: "--cif"
+    exec: cif
+    sampleInputPath: inputs/input.cif
 runScript: |
-  export PROGRAM_HOME={{PROGRAM_HOME}}
+  export PROGRAM_HOME=&&PROGRAM_HOME&&
 
-  python3 {{PROGRAM_HOME}}/script_modeling.py {{inputArgs}}
+  python3 &&PROGRAM_HOME&&/script_modeling.py &&inputArgs&&
 
   pw.x < simulation_1.txt 
   pw.x < simulation_2.txt 
   bands.x < simulation_3.txt
+  python3 &&PROGRAM_HOME&&/bandgap-plotly.py --gnu bands.out.gnu --json json_kpath.json
+  rm -rf simulation_1.txt simulation_2.txt simulation_3.txt
 slurm:
   runType: single
+  nodes: 1
