@@ -1,7 +1,0 @@
----
-- id: 1
-  name: qe_demo
-  location: /EDISON2/solvers/qe_demo/1.0.0
-- id: 2
-  name: qe_dos
-  location: /EDISON2/solvers/qe_dos/1.0.0
