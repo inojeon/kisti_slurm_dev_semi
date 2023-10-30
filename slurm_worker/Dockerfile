@@ -32,7 +32,7 @@ RUN ln -fs /usr/local/bin/python3.11 /usr/bin/python \
   && ln -fs /usr/local/bin/pip3.11 /usr/bin/pip \
   && ln -fs /usr/local/bin/pip3.11 /usr/bin/pip3 
 
-RUN pip3 install tomli ase
+RUN pip3 install tomli ase toml
 
 # 실행 스크립트 파일 Copy
 COPY slurm_worker/worker-entrypoint.sh /usr/local/bin/worker-entrypoint.sh

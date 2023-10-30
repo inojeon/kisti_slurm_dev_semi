@@ -16,7 +16,9 @@ services:
     hostname: slurmctld
     container_name: slurmctld
     volumes:
-      - ./EDISON2:/EDISON2
+      - ./EDISON2/home:/home
+      - ./EDISON2/singularity:/singularity
+      - ./EDISON2/solvers:/solvers
       - /Users/ino/Work/kisti/edison/2023/slurm-api:/slurm-api
     ports:
       - "6817:6817"
@@ -30,20 +32,24 @@ services:
     hostname: slurmd-0
     container_name: slurmd-0
     volumes:
-      - ./EDISON2:/EDISON2
+      - ./EDISON2/home:/home
+      - ./EDISON2/singularity:/singularity
+      - ./EDISON2/solvers:/solvers
     expose:
       - "6818"
     depends_on:
       - "slurmctld"
-  # slurmd-1:
-  #   image: slurm_worker_rocky8:21
-  #   hostname: slurmd-1
-  #   container_name: slurmd-1
-  #   volumes:
-  #     - slurm_jobdir:/data
-  #   expose:
-  #     - "6818"
-  #   depends_on:
-  #     - "slurmctld"
+  slurmd-1:
+    image: slurm_worker_rocky8:21
+    hostname: slurmd-1
+    container_name: slurmd-1
+    volumes:
+      - ./EDISON2/home:/home
+      - ./EDISON2/singularity:/singularity
+      - ./EDISON2/solvers:/solvers
+    expose:
+      - "6818"
+    depends_on:
+      - "slurmctld"
 volumes:
   slurm_jobdir:
